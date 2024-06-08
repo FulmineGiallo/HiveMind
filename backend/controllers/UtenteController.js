@@ -19,22 +19,22 @@ export class UtenteController
     });
 
     if(!user)
-      {
-        req.session.error="Invalid Credentials";
-        //return message json to Client
-        res.status(401).json({ message: 'Email o password non validi' });
+    {
+      req.session.error="Invalid Credentials";
+      //return message json to Client
+      res.status(401).json({ message: 'Email o password non validi' });
 
-      }
-      else
-      {
-        req.session.isAuth = true;
-        req.session.email = user.email;
-        req.session.userId = user.id; // Imposta l'ID dell'utente nella sessione
-        res.status(200).json({ 
-          user: user,
-          session: req.session // Restituisce la sessione appena creata
-        });
-      } 
+    }
+    else
+    {
+      req.session.isAuth = true;
+      req.session.email = user.email;
+      req.session.userId = user.id; // Imposta l'ID dell'utente nella sessione
+      res.status(200).json({ 
+        user: user,
+        session: req.session // Restituisce la sessione appena creata
+      });
+    } 
     
   }
 

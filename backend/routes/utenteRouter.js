@@ -11,7 +11,7 @@ UtenteRouter.get("/users", (req, res, next) => {
   });
 });
 
-UtenteRouter.get('/login', (req, res, next) => {
+UtenteRouter.post('/login', (req, res, next) => {
   UtenteController.findByEmailAndPassword(req,res)
     .then(result => {
       res.json(result);

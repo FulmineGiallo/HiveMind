@@ -9,40 +9,26 @@ const Login = () => {
   const [responseData, setResponseData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const history = useNavigate ();
+  const history = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Email : " + email);
     console.log("Password: " + password);
    
-
-    //setLoading(true);
-    //setError(null);
-
     try {
-      const response = await axios.get('http://localhost:5000/login', {
-        email: email,
-        password: password
-      },{ withCredentials: true });
-      if (response.status === 200) 
-      {
-        // Login riuscito, reindirizza l'utente alla home
+      const response = await axios.post('http://localhost:5000/login', {
+        email,
+        password
+      }, { withCredentials: true });
+
+      if (response.status === 200) {
         history('/');
       }
-      // Se la richiesta ha successo, aggiorna lo stato con i dati ricevuti
-      //Bisogna ricevere il cookie dal Server, cosi da mantenere la sessione.
-      //setResponseData(response.data);
+    } catch (error) {
+      setError('Email o password non validi');
     }
-    catch (error) 
-    {
-      // Se si verifica un errore, gestiscilo
-      //setError(error);
-    }
-    // Aggiungi la logica di autenticazione qui
-  
-  
-  }
+  };
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
@@ -51,6 +37,7 @@ const Login = () => {
           <img className="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo"/>
           HiveMind    
         </a>
+        {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6" action="#">
