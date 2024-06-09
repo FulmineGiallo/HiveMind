@@ -12,14 +12,20 @@ import crypto from 'crypto';
 const app = express();
 const PORT = 5000;
 
+// CORS middleware
+const allowCrossDomain = (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+};
 
 // Register the morgan logging middleware, use the 'dev' format
-app.use(morgan('dev'));
 app.use(cors({
-  origin: 'http://localhost:5000', // L'origine del tuo frontend
+  origin: 'http://localhost:3000', // L'origine del tuo frontend
   credentials: true // Permetti l'invio dei cookie
 }));
-
+app.use(allowCrossDomain);
 // Parse incoming requests with a JSON payload
 app.use(express.json());
 

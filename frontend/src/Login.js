@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContex.js'
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [responseData, setResponseData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  //const [message, setMessage] = useState('');
+  //const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const history = useNavigate();
+  const { setIsLoggedIn, setUsername } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => 
+  {
     e.preventDefault();
     console.log("Email : " + email);
     console.log("Password: " + password);
@@ -24,6 +26,8 @@ const Login = () => {
 
       if (response.status === 200) {
         history('/');
+        setIsLoggedIn(true);
+        setUsername(response.data.user.username); // Imposta l'username
       }
     } catch (error) {
       setError('Email o password non validi');
@@ -76,7 +80,7 @@ const Login = () => {
         </div>
         
         {error && <div>Si è verificato un errore: {error.message}</div>}
-        {responseData && <div>Token di accesso: {responseData.token}</div>}
+      
       </div>
     </section>
   );

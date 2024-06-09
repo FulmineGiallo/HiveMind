@@ -40,15 +40,20 @@ export class UtenteController
 
   static async saveUtente(req) 
   {
-    const { email, password } = req.body;
-    try 
-    {
-      const nuovoUtente = await Utente.create({ email, password });
+    const { username, email, password } = req.body;
+    try {
+      // Cerca un utente con lo stesso indirizzo email
+      const existingUtente = await Utente.findOne({ where: { email } });
+      // Se esiste un utente con lo stesso indirizzo email, restituisci un errore
+      if (existingUtente) {
+        throw new Error('USER_PRESENT');
+      }
+      // Altrimenti, crea un nuovo utente
+      const nuovoUtente = await Utente.create({ username, email, password });
       return nuovoUtente;
-    } 
-    catch (error) 
-    {
-      throw new Error("Errore nella creazione dell'utente: " + error.message);
+    } catch (error) {
+      // Gestisci l'errore qui
+      throw new Error(error.message);
     }
   }
 

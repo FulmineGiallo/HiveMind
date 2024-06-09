@@ -18,9 +18,9 @@ export const {Utente} = database.models;
 // Post.belongsTo(Utente);
 
 // Sincronizzare lo schema (creare tabelle mancanti)
-database.sync().then(() => {
-    console.log("Database synchronized correctly");
+database.sync({ force: true }).then(() => {
+    console.log("Tutte le tabelle sono state eliminate e ricreate correttamente");
 }).catch(err => {
-    console.error("Error with database synchronization: " + err.message);
+    console.error("Errore durante la sincronizzazione del database: " + err.message);
 });
 

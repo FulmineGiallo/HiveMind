@@ -8,9 +8,16 @@ export function createUtenteModel(database) {
             autoIncrement: true,
             primaryKey: true
         },
+        username: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+            unique: true 
+        },
         email: {
             type: DataTypes.TEXT,
-            allowNull: false
+            allowNull: false,
+            unique: true 
+
         },
         password: {
             type: DataTypes.TEXT,
@@ -20,5 +27,6 @@ export function createUtenteModel(database) {
         sequelize: database,
         modelName: 'Utente'
     });
+  
     return Utente;
 }
