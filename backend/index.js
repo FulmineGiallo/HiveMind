@@ -7,6 +7,7 @@ import session from 'express-session';
 import {database} from './models/connectionDB.js'
 import bodyParser from 'body-parser'; // Importa body-parser
 import crypto from 'crypto';
+import { IdeaRouter } from "./routes/ideaRouter.js";
 
 
 const app = express();
@@ -57,6 +58,7 @@ app.use(session({
 // Sincronizzare il negozio delle sessioni
 sessionStore.sync();
 app.use(UtenteRouter);
+app.use(IdeaRouter);
 
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: false}));

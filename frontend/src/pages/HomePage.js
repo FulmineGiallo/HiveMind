@@ -1,5 +1,5 @@
 import '../style/App.css';
-import Card from './Card.js';
+import Card from './Card/Card.js';
 import cardsData from '../data/ideas.json'; // Importa il file JSON
 import useFetch from '../service/useFetch.js';
 

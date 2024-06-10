@@ -1,6 +1,6 @@
 import './style/App.css'
-import NavBar from './pages/NavBar.js'
-import NavBarAfterLogin from './pages/NavBarAfterLogin.js';
+import NavBar from './pages/NavBar/NavBar.js'
+import NavBarAfterLogin from './pages/NavBar/NavBarAfterLogin.js';
 import Footer from './pages/Footer.js';
 import React, { useState, useEffect } from 'react';
 import useFetch from './service/useFetch.js';
@@ -14,6 +14,8 @@ import ProtectedRoute from './route/ProtecteRoute.js';
 import PublicRoute from './route/PublicRoute.js'; // Importa la nuova rotta pubblica
 import ProtectedComponent from './route/ProtectedComponent.js';
 import RichTextEditor from './pages/insertCard.js'
+import NotLogged from './pages/NotLogged.js';
+import IdeasPage from './pages/IdeaPages.js';
 
 const AppContent = () => {
   const { isLoggedIn } = useAuth();
@@ -26,16 +28,17 @@ const AppContent = () => {
       {isLoggedIn ? <NavBarAfterLogin /> : <NavBar />}
       <div className="content">
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/insert" element={<RichTextEditor/>} />
-          <Route element={<PublicRoute />}>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-          </Route>
-          <Route element={<ProtectedRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<IdeasPage />} /> 
             <Route path="/protected" element={<ProtectedComponent />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
+            {isLoggedIn && (
+              <Route path="/insert" element={<RichTextEditor />} />
+            )}
+            {!isLoggedIn && (
+              <Route path="*" element={<NotLogged />} />
+            )}
+            <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       <Footer />
