@@ -1,7 +1,7 @@
 // src/PublicRoute.js
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../AuthContex.js';
+import { useAuth } from '../utils/AuthContex.js';
 
 const PublicRoute = () => {
   const { isLoggedIn } = useAuth();
