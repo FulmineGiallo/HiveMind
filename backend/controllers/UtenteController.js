@@ -6,8 +6,17 @@ export class UtenteController
   {
     return Utente.findAll();
   }
-
- static async findByEmailAndPassword(req,res) 
+  static async findByUsername(req) {
+    try {
+      const { username } = req.params;
+      const user = await Utente.findOne({ where: { username : username } });
+      return user;
+    } catch (error) {
+      throw new Error('Errore durante la ricerca dell\'utente per username');
+    }
+  }
+  
+  static async findByEmailAndPassword(req,res) 
  {
     const { email, password } = req.body;
     
@@ -74,7 +83,8 @@ export class UtenteController
       })
     })
   }
-  static async logout(req, res) {
+  static async logout(req, res) 
+  {
     req.session.destroy((err) => {
       if (err) {
         return res.status(500).json({ message: 'Errore durante il logout' });

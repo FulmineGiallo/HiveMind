@@ -58,5 +58,114 @@ export class IdeaController
       })
     })
   }
+  static async increment(req, res) 
+  {
+    try 
+    {
+      const id = req.params.id;
+      const username = req.params.username; // Ottieni l'username dal percorso della richiesta
+      // Controlla se l'utente esiste nel database
+      const existingUser = await Utente.findOne({ where: { username: username } });
+      if (!existingUser) {
+        return res.status(404).json({ error: 'Utente non trovato' });
+      }
+      const idea = await Idea.findByPk(id, { 
+        include: 
+        {
+          model: Utente,
+          attributes: ['username'] // Seleziona solo il campo username dell'utente
+        }
+      });
+
+      if (!idea) 
+      {
+          return res.status(404).json({ error: 'Idea non trovata' });
+      }
+      // Controllo se l'utente ha già inserito un like per questa idea
+      if (idea.like && idea.like.includes(username)) 
+      {
+        return { status: 400, data: 'Hai già inserito il like' };
+      }
+      // Aggiungo l'username dell'utente ai likes e salvo l'idea
+      // Aggiorna il campo 'like' usando il metodo `update`
+      // Rimuovi l'username da 'dislike' se presente
+        idea.dislike = idea.dislike.filter(user => user !== username);
+        const updatedLikes = [...idea.like, username];
+        
+        await Idea.update(
+          { like: updatedLikes, dislike: idea.dislike },
+          { where: { id: id } }
+      );
+      // Ritorna l'idea aggiornata
+      const updatedIdea = await Idea.findByPk(id, { 
+        include: 
+        {
+          model: Utente,
+          attributes: ['username'] // Seleziona solo il campo username dell'utente
+        }
+      });
+
+      res.status(200).json(updatedIdea);
+    } 
+    catch (error) 
+    {
+        return { status: 500, data: 'Errore durante l\'incremento dei like:' };
+    }
+  }
+  static async decrement(req, res) 
+  {
+    try 
+    {
+      const id = req.params.id;
+      const username = req.params.username; // Ottieni l'username dal percorso della richiesta
+      // Controlla se l'utente esiste nel database
+      const existingUser = await Utente.findOne({ where: { username: username } });
+      if (!existingUser) {
+        return res.status(404).json({ error: 'Utente non trovato' });
+      }
+      const idea = await Idea.findByPk(id, { 
+        include: 
+        {
+          model: Utente,
+          attributes: ['username'] // Seleziona solo il campo username dell'utente
+        }
+      });
+
+      if (!idea) 
+      {
+          return res.status(404).json({ error: 'Idea non trovata' });
+      }
+      // Controllo se l'utente ha già inserito un like per questa idea
+      if (idea.dislike && idea.dislike.includes(username)) 
+      {
+        return { status: 400, data: 'Hai già inserito il dislike' };
+      }
+      // Aggiungo l'username dell'utente ai likes e salvo l'idea
+        // Aggiorna il campo 'like' usando il metodo `update`
+        // Rimuovi l'username da 'like' se presente
+        idea.like = idea.like.filter(user => user !== username);
+        const updatedDislikes = [...idea.dislike, username];
+
+        await Idea.update(
+          { like: idea.like, dislike: updatedDislikes },
+          { where: { id: id } }
+      );
+      // Ritorna l'idea aggiornata
+      const updatedIdea = await Idea.findByPk(id, { 
+        include: 
+        {
+          model: Utente,
+          attributes: ['username'] // Seleziona solo il campo username dell'utente
+        }
+      });
+
+      res.status(200).json(updatedIdea);
+    } 
+    catch (error) 
+    {
+        return { status: 500, data: 'Errore durante l\'incremento dei like:' };
+    }
+  }
+  
 
 }

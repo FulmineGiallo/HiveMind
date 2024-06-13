@@ -18,6 +18,18 @@ export function createIdeaModel(database)
             type: DataTypes.TEXT,
             allowNull: false,
             unique: false 
+        },
+        like :
+        {
+            type: DataTypes.ARRAY(DataTypes.TEXT),
+            allowNull: false,
+            defaultValue: []
+        },
+        dislike :
+        {
+            type: DataTypes.ARRAY(DataTypes.TEXT),
+            allowNull: false,
+            defaultValue: []
         }
     }, {
         sequelize: database,

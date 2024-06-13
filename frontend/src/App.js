@@ -13,9 +13,9 @@ import { AuthProvider, useAuth} from './utils/AuthContex.js';
 import ProtectedRoute from './route/ProtecteRoute.js';
 import PublicRoute from './route/PublicRoute.js'; // Importa la nuova rotta pubblica
 import ProtectedComponent from './route/ProtectedComponent.js';
-import RichTextEditor from './pages/insertCard.js'
+import RichTextEditor from './pages/Card/insertCard.js'
 import NotLogged from './pages/NotLogged.js';
-import IdeasPage from './pages/IdeaPages.js';
+import IdeasPage from './pages/Card/IdeaPages.js';
 
 const AppContent = () => {
   const { isLoggedIn } = useAuth();

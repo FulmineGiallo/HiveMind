@@ -20,8 +20,8 @@ Idea.belongsTo(Utente);
 // Post.belongsTo(Utente);
 
 // Sincronizzare lo schema (creare tabelle mancanti)
-database.sync({ force: true }).then(() => {
-    console.log("Tutte le tabelle sono state eliminate e ricreate correttamente");
+database.sync({ alter: true }).then(() => {
+    console.log("Tutte le tabelle sono state sincronizzate correttamente");
 }).catch(err => {
     console.error("Errore durante la sincronizzazione del database: " + err.message);
 });
