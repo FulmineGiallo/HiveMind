@@ -8,7 +8,7 @@ import {database} from './models/connectionDB.js'
 import bodyParser from 'body-parser'; // Importa body-parser
 import crypto from 'crypto';
 import { IdeaRouter } from "./routes/ideaRouter.js";
-
+import { CommentoRouter } from './routes/commentoRouter.js';
 
 const app = express();
 const PORT = 5000;
@@ -59,7 +59,7 @@ app.use(session({
 sessionStore.sync();
 app.use(UtenteRouter);
 app.use(IdeaRouter);
-
+app.use(CommentoRouter);
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: false}));
 /*

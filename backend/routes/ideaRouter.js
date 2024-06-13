@@ -36,3 +36,18 @@ IdeaRouter.delete("/idea/:id", (req, res, next) => {
     next(err);
   })
 });
+
+IdeaRouter.patch('/idee/:id/like/:username', async (req, res,next) => {
+  IdeaController.increment(req,res).then( (item) => {
+    res.json(item);
+  }).catch( err => {
+    next(err);
+  })
+});
+IdeaRouter.patch('/idee/:id/dislike/:username', async (req, res) => {
+  IdeaController.decrement(req,res).then( (item) => {
+    res.json(item);
+  }).catch( err => {
+    next(err);
+  })
+});

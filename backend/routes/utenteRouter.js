@@ -40,6 +40,15 @@ UtenteRouter.get("/utente/:id", (req, res, next) => {
   })
 });
 
+UtenteRouter.get("/utente/:username", (req, res, next) => {
+  UtenteController.findByUsername(req).then((item) => {
+      res.json(item);
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
 UtenteRouter.delete("/utente/:id", (req, res, next) => {
   UtenteController.delete(req).then( (item) => {
     res.json(item);

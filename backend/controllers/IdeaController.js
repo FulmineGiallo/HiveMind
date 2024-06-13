@@ -1,16 +1,34 @@
 import { Idea } from "../models/connectionDB.js";
 import { Utente } from "../models/connectionDB.js";
+import { Commento } from "../models/connectionDB.js";
 
 export class IdeaController 
 {
   static async getAllIdea() {
-    return Idea.findAll({
-      include: {
-        model: Utente,
-        attributes: ['username'] // Seleziona solo il campo username dell'utente
-      }
-    });
+    try {
+      const ideeConCommenti = await Idea.findAll({
+        include: [
+          {
+            model: Utente,
+            attributes: ['username'] // Seleziona solo il campo username dell'utente
+          },
+          {
+            model: Commento, // Include i commenti associati a ciascuna idea
+            include: {
+              model: Utente,
+              attributes: ['username']
+            }
+          }
+        ]
+      });
+  
+      return ideeConCommenti;
+    } catch (error) {
+      console.error('Errore nel recuperare le idee con i commenti e gli utenti:', error);
+      throw error;
+    }
   }
+  
 
   static async saveIdea(req) 
   {

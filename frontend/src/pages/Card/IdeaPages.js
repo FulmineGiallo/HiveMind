@@ -85,7 +85,10 @@ const IdeasPage = () => {
             onLike={() => handleLike(idea.id)}
             onDislike={() => handleDislike(idea.id)}
             loadingAction={loadingAction}
+            ideaId={idea.id}
+            comments={idea.comments} // Assicurati che `idea.comments` sia un array
           />
+          
         ))}
       </div>
 
