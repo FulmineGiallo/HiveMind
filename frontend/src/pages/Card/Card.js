@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Comment from './Comment.js'; // Importa il componente Comment
+import { useAuth } from '../../utils/AuthContex.js';
 
 const Card = ({ autore, titolo, descrizione, likes, dislikes, onLike, onDislike, loadingAction, ideaId }) => {
   const [showComments, setShowComments] = useState(false);
@@ -7,6 +8,7 @@ const Card = ({ autore, titolo, descrizione, likes, dislikes, onLike, onDislike,
   const [newComment, setNewComment] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
   const [postingComment, setPostingComment] = useState(false);
+  const {username} = useAuth();
 
   // Funzione per caricare i commenti dall'API
   const fetchComments = async () => {
@@ -30,23 +32,40 @@ const Card = ({ autore, titolo, descrizione, likes, dislikes, onLike, onDislike,
   }, [showComments, ideaId]);
 
   // Funzione per gestire l'invio di un nuovo commento
-  const handleSubmitComment = async (event) => {
+  const handleSubmitComment = async (event) => 
+  {
     event.preventDefault();
     if (!newComment.trim()) {
       alert('Il commento non può essere vuoto.');
       return;
     }
-
+  
     setPostingComment(true);
     try {
-      // Simulazione dell'invio del commento (sostituire con la chiamata reale all'API)
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulazione di un ritardo di 1 secondo
-      const fakeComment = {
-        username: 'You', // Aggiustato il campo autore a username
-        contenuto: newComment,
-        data_pubblicazione: new Date().toISOString(), // Aggiungi una data reale o generata dal backend
-      };
-      setComments([fakeComment, ...comments]); // Aggiungi il nuovo commento alla lista
+      const response = await fetch('http://localhost:5000/registerCommento', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data_pubblicazione: new Date(),
+          contenuto: newComment,
+          username: username,
+          titolo: titolo,
+          IdeaId: ideaId,
+        }),
+      });
+      const responseClone = response.clone();
+      if (!response.ok) {
+        // Se la risposta non è OK, crea un clone e ottieni il messaggio di errore
+        const errorData = await responseClone.json();
+        throw new Error(errorData.message || 'Errore durante l\'invio del commento.');
+      }
+  
+      // Continua con la normale elaborazione della risposta
+      const newCommentData = await response.json();
+  
+      setComments([...comments, newCommentData]); // Aggiungi il nuovo commento alla fine della lista
       setNewComment(''); // Resetta il campo di input dopo l'invio
     } catch (error) {
       console.error('Errore durante il post del commento:', error);
@@ -55,6 +74,7 @@ const Card = ({ autore, titolo, descrizione, likes, dislikes, onLike, onDislike,
       setPostingComment(false);
     }
   };
+  
 
   // Funzione per gestire il cambio del testo del nuovo commento
   const handleChangeNewComment = (event) => {
@@ -133,7 +153,7 @@ const Card = ({ autore, titolo, descrizione, likes, dislikes, onLike, onDislike,
               ) : (
                 <ul>
                   {comments.map((comment, index) => (
-                    <Comment key={index} autore={comment.Utente.username} testo={comment.contenuto} datetime={comment.data_pubblicazione} />
+                    <Comment key={index} autore={comment.username} testo={comment.contenuto} datetime={comment.data_pubblicazione} />
                   ))}
                 </ul>
               )}

@@ -15,23 +15,25 @@ export class CommentoController
     
     static async saveCommento(req) 
     {
-    const { data_pubblicazione, contenuto, titolo, username } = req.body; //titolo e username bisogna prenderli da Idea e Utente.
+      const { data_pubblicazione, contenuto, titolo, username } = req.body; //titolo e username bisogna prenderli da Idea e Utente.
     try 
     {
         // Cerca l'idea a cui si sta commentando
         const idea = await Idea.findOne({ where: { titolo } });
         
         // Se l'idea non esiste, restituisci un errore
-        if (!idea) {
-            throw new Error('IDEA_NON_TROVATA');
+        if (!idea) 
+        {
+          throw new Error('IDEA_NON_TROVATA');
         }
     
         // Cerca l'utente che sta scrivendo il commento
         const utente = await Utente.findOne({ where: { username } });
     
         // Se l'utente non esiste, restituisci un errore
-        if (!utente) {
-            throw new Error('UTENTE_NON_TROVATO');
+        if (!utente) 
+        {
+          throw new Error('UTENTE_NON_TROVATO');
         }
     
         // Crea il nuovo commento
@@ -42,11 +44,17 @@ export class CommentoController
             UtenteId: utente.id
         });
     
-        return nuovoCommento;
+        const commentoConUtente = {
+          ...nuovoCommento.dataValues,
+          username: utente.username
+        };
 
-        } catch (error) {
-        // Gestisci l'errore qui
-        throw new Error(error.message);
+        return commentoConUtente;
+        } 
+        catch (error) 
+        {
+          // Gestisci l'errore qui
+          throw new Error(error.message);
         }
     }
     
