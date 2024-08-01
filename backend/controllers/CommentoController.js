@@ -46,7 +46,9 @@ export class CommentoController
     
         const commentoConUtente = {
           ...nuovoCommento.dataValues,
-          username: utente.username
+          Utente: {
+            username: utente.username
+        }
         };
 
         return commentoConUtente;

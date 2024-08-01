@@ -1,19 +1,21 @@
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom'; // Importa Link
-
-const navigation = [
-  { name: 'Homepage', href: '/', current: true },
-  { name: 'Popular', href: '/popular', current: false },
-  { name: 'UnPopular', href: '/unpopular', current: false },
-];
+import { Link, useLocation } from 'react-router-dom'; // Importa useLocation
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function Example() {
+  const location = useLocation(); // Ottieni la location corrente
+
+  const navigation = [
+    { name: 'Homepage', href: '/' },
+    { name: 'Popular', href: '/popular' },
+    { name: 'UnPopular', href: '/unpopular' },
+  ];
+
   return (
     <Disclosure as="nav" className="bg-gray-800 fixed w-full z-10 top-0">
       {({ open }) => (
@@ -46,10 +48,10 @@ export default function Example() {
                         key={item.name}
                         to={item.href}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          location.pathname === item.href ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
                         )}
-                        aria-current={item.current ? 'page' : undefined}
+                        aria-current={location.pathname === item.href ? 'page' : undefined}
                       >
                         {item.name}
                       </Link>
@@ -58,7 +60,6 @@ export default function Example() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {/* Utilizza Link invece di <a> per la pagina di login */}
                 <Link
                   to="/login"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white"
@@ -87,10 +88,10 @@ export default function Example() {
                   as={Link}
                   to={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                    location.pathname === item.href ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium'
                   )}
-                  aria-current={item.current ? 'page' : undefined}
+                  aria-current={location.pathname === item.href ? 'page' : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>

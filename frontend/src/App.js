@@ -16,6 +16,8 @@ import ProtectedComponent from './route/ProtectedComponent.js';
 import RichTextEditor from './pages/Card/insertCard.js'
 import NotLogged from './pages/NotLogged.js';
 import IdeasPage from './pages/Card/IdeaPages.js';
+import Popular from './pages/Card/Popular.js';
+import UnPoular from './pages/Card/UnPopular.js';
 
 const AppContent = () => {
   const { isLoggedIn } = useAuth();
@@ -30,6 +32,8 @@ const AppContent = () => {
         <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/popular" element={<Popular />} />
+            <Route path="/unpopular" element={<UnPoular />} />
             <Route path="/" element={<IdeasPage />} /> 
             <Route path="/protected" element={<ProtectedComponent />} />
             {isLoggedIn && (

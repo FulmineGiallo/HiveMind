@@ -37,13 +37,13 @@ const useFetch = (url) => {
       setData((prevData) =>
         prevData.map((item) => (item.id === updatedItem.id ? updatedItem : item))
       );
-      return updatedItem;
+      return { updatedItem, error: null };
     } catch (error) {
       console.error('There was an error updating the data!', error);
+      return { updatedItem: null, error };
     } finally {
       setLoadingAction(false);
     }
-   
   };
 
   return { data, loading, error, loadingAction, updateData };

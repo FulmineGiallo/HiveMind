@@ -4,17 +4,17 @@ import './IdeaPages.css';
 import { useAuth } from '../../utils/AuthContex.js';
 import useFetch from './useFetch.js';
 
-const IdeasPage = () => {
+const IdeasPage = ({ sortBy }) => {
   const { data: ideas, loading, error, loadingAction, updateData } = useFetch('http://localhost:5000/idee');
   const [currentPage, setCurrentPage] = useState(1);
   const ideasPerPage = 10;
   const { username } = useAuth();
+  
+  const [likedIdeas, setLikedIdeas] = useState([]);
+  const [dislikedIdeas, setDislikedIdeas] = useState([]);
+  const [actionError, setActionError] = useState({ id: null, message: '' }); // Errore specifico per idea
 
-   // Stati per tenere traccia dei like e dislike
-   const [likedIdeas, setLikedIdeas] = useState([]);
-   const [dislikedIdeas, setDislikedIdeas] = useState([]);
-
-   const updateIdeaLikesDislikes = (updatedIdea) => {
+  const updateIdeaLikesDislikes = (updatedIdea) => {
     setLikedIdeas((prevLikes) =>
       prevLikes.map((idea) =>
         idea.id === updatedIdea.id ? { ...idea, like: updatedIdea.like.length } : idea
@@ -26,22 +26,31 @@ const IdeasPage = () => {
       )
     );
   };
-  
-  // Funzione per gestire il like di un'idea
+
   const handleLike = async (id) => {
-    const updatedIdea = await updateData(`http://localhost:5000/idee/${id}/like/${username}`);
-    if (updatedIdea) {
-      updateIdeaLikesDislikes(updatedIdea);
+    const { updatedItem, error } = await updateData(`http://localhost:5000/idee/${id}/like/${username}`);
+    if (error) {
+      setActionError({ id, message: error.response?.data?.error || 'Errore durante il like' });
+    } else {
+      if (updatedItem) {
+        updateIdeaLikesDislikes(updatedItem);
+      }
+      setActionError({ id: null, message: '' }); // Resetta l'errore se l'azione ha successo
     }
   };
 
-  // Funzione per gestire il dislike di un'idea
   const handleDislike = async (id) => {
-    const updatedIdea = await updateData(`http://localhost:5000/idee/${id}/dislike/${username}`);
-    if (updatedIdea) {
-      updateIdeaLikesDislikes(updatedIdea);
+    const { updatedItem, error } = await updateData(`http://localhost:5000/idee/${id}/dislike/${username}`);
+    if (error) {
+      setActionError({ id, message: error.response?.data?.error || 'Errore durante il dislike' });
+    } else {
+      if (updatedItem) {
+        updateIdeaLikesDislikes(updatedItem);
+      }
+      setActionError({ id: null, message: '' }); // Resetta l'errore se l'azione ha successo
     }
   };
+
   useEffect(() => {
     if (ideas.length > 0) {
       setLikedIdeas(ideas.map((idea) => ({ id: idea.id, like: idea.like.length })));
@@ -57,10 +66,19 @@ const IdeasPage = () => {
     return <div>Error fetching data: {error.message}</div>;
   }
 
-  const totalPages = Math.ceil(ideas.length / ideasPerPage);
+  const sortedIdeas = [...ideas].sort((a, b) => {
+    if (sortBy === 'likes') {
+      return b.like.length - a.like.length;
+    } else if (sortBy === 'dislikes') {
+      return b.dislike.length - a.dislike.length;
+    }
+    return 0;
+  });
+
+  const totalPages = Math.ceil(sortedIdeas.length / ideasPerPage);
   const indexOfLastIdea = currentPage * ideasPerPage;
   const indexOfFirstIdea = indexOfLastIdea - ideasPerPage;
-  const currentIdeas = ideas.slice(indexOfFirstIdea, indexOfLastIdea);
+  const currentIdeas = sortedIdeas.slice(indexOfFirstIdea, indexOfLastIdea);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const prevPage = () => {
@@ -73,9 +91,9 @@ const IdeasPage = () => {
   return (
     <div className="ideas-page">
       <div className="ideas-list">
-        {currentIdeas.map((idea, index) => (
+        {currentIdeas.map((idea) => (
           <Card
-            key={index}
+            key={idea.id}
             id={idea.id}
             autore={idea.Utente.username}
             titolo={idea.titolo}
@@ -84,11 +102,11 @@ const IdeasPage = () => {
             dislikes={dislikedIdeas.find((item) => item.id === idea.id)?.dislike || idea.dislike.length}
             onLike={() => handleLike(idea.id)}
             onDislike={() => handleDislike(idea.id)}
-            loadingAction={loadingAction}
+            loadingAction={loading}
             ideaId={idea.id}
-            comments={idea.comments} // Assicurati che `idea.comments` sia un array
+            comments={idea.comments}
+            errorMessage={actionError.id === idea.id ? actionError.message : ''} // Mostra l'errore solo se corrisponde all'ID della card
           />
-          
         ))}
       </div>
 
