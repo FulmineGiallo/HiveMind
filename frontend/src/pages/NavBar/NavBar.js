@@ -1,14 +1,14 @@
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Link, useLocation } from 'react-router-dom'; // Importa useLocation
+import { Link, useLocation } from 'react-router-dom';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function Example() {
-  const location = useLocation(); // Ottieni la location corrente
+  const location = useLocation();
 
   const navigation = [
     { name: 'Homepage', href: '/' },
@@ -23,8 +23,7 @@ export default function Example() {
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                  <span className="absolute -inset-0.5" />
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -36,7 +35,7 @@ export default function Example() {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   <img
-                    className="h-8 w-auto"
+                    className="block h-8 w-auto mr-14"
                     src="https://i.ibb.co/CWQtMWz/logo-1.png"
                     alt="Your Company"
                   />
@@ -59,7 +58,7 @@ export default function Example() {
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 space-x-4">
                 <Link
                   to="/login"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white"
@@ -68,11 +67,10 @@ export default function Example() {
                 </Link>
                 <Link
                   to="/register"
-                  className="relative rounded-full bg-gray-800 px-10 text-gray-400 hover:text-white"
+                  className="relative rounded-full bg-gray-800 px-3 py-2 text-gray-400 hover:text-white"
                 >
                   Registrazione
                 </Link>
-                {/* Rimani con il menu per il profilo */}
                 <Menu as="div" className="relative ml-3">
                   {/* Il resto del codice rimane invariato */}
                 </Menu>

@@ -28,6 +28,10 @@ const IdeasPage = ({ sortBy }) => {
   };
 
   const handleLike = async (id) => {
+    if (!username) {
+      setActionError({ id, message: 'Devi essere loggato per mettere like.' });
+      return;
+    }
     const { updatedItem, error } = await updateData(`http://localhost:5000/idee/${id}/like/${username}`);
     if (error) {
       setActionError({ id, message: error.response?.data?.error || 'Errore durante il like' });
@@ -40,6 +44,10 @@ const IdeasPage = ({ sortBy }) => {
   };
 
   const handleDislike = async (id) => {
+    if (!username) {
+      setActionError({ id, message: 'Devi essere loggato per mettere dislike.' });
+      return;
+    }
     const { updatedItem, error } = await updateData(`http://localhost:5000/idee/${id}/dislike/${username}`);
     if (error) {
       setActionError({ id, message: error.response?.data?.error || 'Errore durante il dislike' });
