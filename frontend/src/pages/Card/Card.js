@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Comment from './Comment.js';
 import { useAuth } from '../../utils/AuthContex.js';
 
-const Card = ({ id, autore, titolo, descrizione, likes, dislikes, onLike, onDislike, loadingAction, ideaId, errorMessage, comments }) => {
+const Card = ({ id, autore, titolo, descrizione, likes, dislikes, onLike, onDislike, loadingAction, ideaId, errorMessage, comments, likedByUser, dislikedByUser }) => {
   const [showComments, setShowComments] = useState(false);
   const [commentsList, setCommentsList] = useState([]);
   const [newComment, setNewComment] = useState('');
+  const [commentError, setCommentError] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
   const [postingComment, setPostingComment] = useState(false);
   const { username, isLoggedIn } = useAuth();
@@ -32,9 +33,11 @@ const Card = ({ id, autore, titolo, descrizione, likes, dislikes, onLike, onDisl
   const handleSubmitComment = async (event) => {
     event.preventDefault();
     if (!newComment.trim()) {
-      alert('Il commento non può essere vuoto.');
+      setCommentError('Non puoi inviare un commento vuoto, scrivi qualcosa!');
       return;
     }
+
+    setCommentError(''); // Resetta l'errore se il commento non è vuoto
 
     setPostingComment(true);
     try {
@@ -99,7 +102,11 @@ const Card = ({ id, autore, titolo, descrizione, likes, dislikes, onLike, onDisl
                   <div className="loader"></div>
                 </div>
               ) : (
-                <img className="w-14 h-14 object-cover" src="https://i.ibb.co/qFprP9T/like.png" alt="Like Post" />
+                <img
+                  className={`w-14 h-14 object-cover ${likedByUser ? 'opacity-100' : 'opacity-50'}`}
+                  src="https://i.ibb.co/qFprP9T/like.png"
+                  alt="Like Post"
+                />
               )}
             </button>
             <button onClick={onDislike} className="flex-shrink-0" aria-label="Dislike Post" disabled={loadingAction}>
@@ -108,7 +115,11 @@ const Card = ({ id, autore, titolo, descrizione, likes, dislikes, onLike, onDisl
                   <div className="loader"></div>
                 </div>
               ) : (
-                <img className="w-14 h-14 object-cover" src="https://i.ibb.co/wgnW9sG/dislike.png" alt="Dislike Post" />
+                <img
+                  className={`w-14 h-14 object-cover ${dislikedByUser ? 'opacity-100' : 'opacity-50'}`}
+                  src="https://i.ibb.co/wgnW9sG/dislike.png"
+                  alt="Dislike Post"
+                />
               )}
             </button>
           </div>
@@ -140,6 +151,11 @@ const Card = ({ id, autore, titolo, descrizione, likes, dislikes, onLike, onDisl
         <div className="flex flex-col p-4 border-t border-gray-200 dark:border-gray-700">
           {isLoggedIn && (
             <form onSubmit={handleSubmitComment} className="mb-4">
+              {commentError && (
+                <div className="mb-4 text-red-600 dark:text-red-400">
+                  {commentError}
+                </div>
+              )}
               <textarea
                 value={newComment}
                 onChange={handleChangeNewComment}
@@ -168,8 +184,6 @@ const Card = ({ id, autore, titolo, descrizione, likes, dislikes, onLike, onDisl
           )}
         </div>
       )}
-
-      
     </div>
   );
 };

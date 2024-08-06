@@ -15,8 +15,7 @@ import PublicRoute from './route/PublicRoute.js'; // Importa la nuova rotta pubb
 import ProtectedComponent from './route/ProtectedComponent.js';
 import RichTextEditor from './pages/Card/insertCard.js'
 import NotLogged from './pages/NotLogged.js';
-import IdeasPage from './pages/Card/IdeaPages.js';
-import Popular from './pages/Card/Popular.js';
+import Popular from './pages/Card/Mainstream.js';
 import UnPoular from './pages/Card/UnPopular.js';
 
 const AppContent = () => {
@@ -32,15 +31,15 @@ const AppContent = () => {
         <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/popular" element={<Popular />} />
+            <Route path="/mainstream" element={<Popular />} />
             <Route path="/unpopular" element={<UnPoular />} />
-            <Route path="/" element={<IdeasPage />} /> 
+            <Route path="/homepage" element={<HomePage />} /> 
             <Route path="/protected" element={<ProtectedComponent />} />
             {isLoggedIn && (
               <Route path="/insert" element={<RichTextEditor />} />
             )}
             {!isLoggedIn && (
-              <Route path="*" element={<NotLogged />} />
+              <Route path="*" element={<NotFound />} />
             )}
             <Route path="*" element={<NotFound />} />
         </Routes>

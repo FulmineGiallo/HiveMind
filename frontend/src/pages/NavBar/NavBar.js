@@ -11,8 +11,8 @@ export default function Example() {
   const location = useLocation();
 
   const navigation = [
-    { name: 'Homepage', href: '/' },
-    { name: 'Popular', href: '/popular' },
+    { name: 'Homepage', href: '/homepage' },
+    { name: 'Mainstream', href: '/mainstream' },
     { name: 'UnPopular', href: '/unpopular' },
   ];
 

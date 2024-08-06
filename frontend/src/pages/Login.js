@@ -25,7 +25,7 @@ const Login = () => {
       }, { withCredentials: true });
 
       if (response.status === 200) {
-        history('/');
+        history('/homepage');
         setIsLoggedIn(true);
         setUsername(response.data.user.username); // Imposta l'username
       }

@@ -12,7 +12,7 @@ const IdeasPage = ({ sortBy }) => {
   
   const [likedIdeas, setLikedIdeas] = useState([]);
   const [dislikedIdeas, setDislikedIdeas] = useState([]);
-  const [actionError, setActionError] = useState({ id: null, message: '' }); // Errore specifico per idea
+  const [actionError, setActionError] = useState({ id: null, message: '' });
 
   const updateIdeaLikesDislikes = (updatedIdea) => {
     setLikedIdeas((prevLikes) =>
@@ -39,7 +39,7 @@ const IdeasPage = ({ sortBy }) => {
       if (updatedItem) {
         updateIdeaLikesDislikes(updatedItem);
       }
-      setActionError({ id: null, message: '' }); // Resetta l'errore se l'azione ha successo
+      setActionError({ id: null, message: '' });
     }
   };
 
@@ -55,7 +55,7 @@ const IdeasPage = ({ sortBy }) => {
       if (updatedItem) {
         updateIdeaLikesDislikes(updatedItem);
       }
-      setActionError({ id: null, message: '' }); // Resetta l'errore se l'azione ha successo
+      setActionError({ id: null, message: '' });
     }
   };
 
@@ -79,6 +79,24 @@ const IdeasPage = ({ sortBy }) => {
       return b.like.length - a.like.length;
     } else if (sortBy === 'dislikes') {
       return b.dislike.length - a.dislike.length;
+    } else if (sortBy === 'balance') {
+      const balanceA = Math.abs(a.like.length - a.dislike.length);
+      const balanceB = Math.abs(b.like.length - b.dislike.length);
+
+      if (balanceA === balanceB) {
+        const totalVotesA = a.like.length + a.dislike.length;
+        const totalVotesB = b.like.length + b.dislike.length;
+        return totalVotesB - totalVotesA; // Prioritize the idea with more total votes
+      }
+      return Math.abs(balanceA) - Math.abs(balanceB); // Prioritize ideas with a balance close to zero
+    } else if (sortBy === 'unpopular') {
+      const balanceA = a.like.length - a.dislike.length;
+      const balanceB = b.like.length - b.dislike.length;
+      return balanceA - balanceB; // Prioritize ideas with the lowest balance
+    } else if (sortBy === 'mainstream') {
+      const balanceA = a.like.length - a.dislike.length;
+      const balanceB = b.like.length - b.dislike.length;
+      return balanceB - balanceA; // Prioritize ideas with the highest balance
     }
     return 0;
   });
@@ -99,23 +117,29 @@ const IdeasPage = ({ sortBy }) => {
   return (
     <div className="ideas-page">
       <div className="ideas-list">
-        {currentIdeas.map((idea) => (
-          <Card
-            key={idea.id}
-            id={idea.id}
-            autore={idea.Utente.username}
-            titolo={idea.titolo}
-            descrizione={idea.descrizione}
-            likes={likedIdeas.find((item) => item.id === idea.id)?.like || idea.like.length}
-            dislikes={dislikedIdeas.find((item) => item.id === idea.id)?.dislike || idea.dislike.length}
-            onLike={() => handleLike(idea.id)}
-            onDislike={() => handleDislike(idea.id)}
-            loadingAction={loading}
-            ideaId={idea.id}
-            comments={idea.comments}
-            errorMessage={actionError.id === idea.id ? actionError.message : ''} // Mostra l'errore solo se corrisponde all'ID della card
-          />
-        ))}
+        {currentIdeas.map((idea) => {
+          const likedByUser = idea.like.includes(username);
+          const dislikedByUser = idea.dislike.includes(username);
+          return (
+            <Card
+              key={idea.id}
+              id={idea.id}
+              autore={idea.Utente.username}
+              titolo={idea.titolo}
+              descrizione={idea.descrizione}
+              likes={likedIdeas.find((item) => item.id === idea.id)?.like || idea.like.length}
+              dislikes={dislikedIdeas.find((item) => item.id === idea.id)?.dislike || idea.dislike.length}
+              onLike={() => handleLike(idea.id)}
+              onDislike={() => handleDislike(idea.id)}
+              loadingAction={loading}
+              ideaId={idea.id}
+              comments={idea.comments}
+              errorMessage={actionError.id === idea.id ? actionError.message : ''}
+              likedByUser={likedByUser}
+              dislikedByUser={dislikedByUser}
+            />
+          );
+        })}
       </div>
 
       <nav aria-label="Page navigation example" className="pagination">

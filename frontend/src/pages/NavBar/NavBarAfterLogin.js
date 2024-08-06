@@ -6,8 +6,8 @@ import { useAuth } from '../../utils/AuthContex.js'; // Importa useAuth
 import axios from 'axios'; // Importa axios
 
 const navigation = [
-  { name: 'Homepage', href: '/' },
-  { name: 'Popular', href: '/popular' },
+  { name: 'Homepage', href: '/homepage' },
+  { name: 'Mainstream', href: '/mainstream' },
   { name: 'UnPopular', href: '/unpopular' },
 ];
 

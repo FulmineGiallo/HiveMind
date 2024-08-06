@@ -1,20 +1,8 @@
-import '../style/App.css';
-import Card from './Card/Card.js';
-import cardsData from '../data/ideas.json'; // Importa il file JSON
-import useFetch from '../service/useFetch.js';
+import React from 'react';
+import IdeaPages from './Card/IdeaPages.js';
 
-
-function HomePage() 
-{
-  const {data : cards, isPending, Error} = useFetch("URL");
-
-  return (
-      <div className="bodyHomePage">
-          <div className="cards">
-            {cards && <Card cards = {cards} />}
-          </div>
-      </div>
-  );
-}
+const HomePage = () => {
+  return <IdeaPages sortBy="balance" />;
+};
 
 export default HomePage;
