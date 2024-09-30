@@ -10,6 +10,7 @@ import crypto from 'crypto';
 import { IdeaRouter } from "./routes/ideaRouter.js";
 import { CommentoRouter } from './routes/commentoRouter.js';
 
+
 const app = express();
 const PORT = 5000;
 
@@ -29,8 +30,6 @@ app.use(cors({
 app.use(allowCrossDomain);
 // Parse incoming requests with a JSON payload
 app.use(express.json());
-
-
 
 const secretKey = crypto.randomBytes(32).toString('hex');
 

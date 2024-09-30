@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 
 export function createCommentoModel(database) 
 {
-    class Commento extends Model {}
+    class Commento extends Model {} 
     Commento.init({
         id: {
             type: DataTypes.INTEGER,

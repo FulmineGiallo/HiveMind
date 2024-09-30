@@ -32,7 +32,8 @@ export default function Example() {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+              {/* Logo visibile solo su desktop */}
+              <div className="hidden sm:flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   <img
                     className="block h-8 w-auto mr-14"
@@ -78,8 +79,16 @@ export default function Example() {
             </div>
           </div>
 
+          {/* Menu mobile con logo */}
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
+              <div className="flex items-center justify-center">
+                <img
+                  className="h-8 w-auto"
+                  src="https://i.ibb.co/CWQtMWz/logo-1.png"
+                  alt="Your Company"
+                />
+              </div>
               {navigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
